@@ -1,11 +1,5 @@
 # Starter pipeline
-- task: ArchiveFiles@2
-  inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)'
-    includeRootFolder: true
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    replaceExistingArchive: true
+
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -15,10 +9,40 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-latest'
-
 steps:
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    sonarQubeRunAnalysis: false
+
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
+
+- task: ArchiveFiles@2
+  inputs:
+      rootFolderOrFile: '$(Build.BinariesDirectory)'
+      includeRootFolder: true
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+      replaceExistingArchive: true
+- task: CmdLine@2
+  inputs:
+    script: 'echo Write your commands here
+      
+      echo Use the environment variables input below to pass secret variables to this script'
+
+- task: AzureWebApp@1
+  inputs:
+    appType: 'webAppLinux'
+    appName: 
+    deployToSlotOrASE: true
+    slotName: 'production'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
