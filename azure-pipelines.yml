@@ -39,7 +39,7 @@ steps:
 - task: AzureWebApp@1
   inputs:
     appType: 'webAppLinux'
-    appName: 
+    appName: 'Newraja'
     deployToSlotOrASE: true
     slotName: 'production'
     package: '$(System.DefaultWorkingDirectory)/**/*.zip'
