@@ -36,13 +36,6 @@ steps:
       
       echo Use the environment variables input below to pass secret variables to this script'
 
-- task: AzureWebApp@1
-  inputs:
-    appType: 'webAppLinux'
-    appName: 'Newraja'
-    deployToSlotOrASE: true
-    slotName: 'production'
-    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
 
 - script: |
     echo Add other tasks to build, test, and deploy your project.
